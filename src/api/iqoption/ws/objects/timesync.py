@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 """Module for IQ Option TimeSync websocket object."""
 
 import time
 import datetime
 
-from src.api.iqoption.ws.objects.base import Base
+from iqoptionapi.ws.objects.base import Base
 
 
 class TimeSync(Base):
@@ -38,15 +37,15 @@ class TimeSync(Base):
         return datetime.datetime.fromtimestamp(self.server_timestamp)
 
     @property
-    def expiration_minutes(self):
+    def expiration_time(self):
         """Property to get expiration time.
 
         :returns: The expiration time.
         """
         return self.__expiration_time
 
-    @expiration_minutes.setter
-    def expiration_minutes(self, minutes):
+    @expiration_time.setter
+    def expiration_time(self, minutes):
         """Method to set expiration time
 
         :param int minutes: The expiration time in minutes.
@@ -59,7 +58,7 @@ class TimeSync(Base):
 
         :returns: The expiration datetime.
         """
-        return self.server_datetime.replace(second=0, microsecond=0) + datetime.timedelta(minutes=self.expiration_minutes)
+        return self.server_datetime + datetime.timedelta(minutes=self.expiration_time)
 
     @property
     def expiration_timestamp(self):
