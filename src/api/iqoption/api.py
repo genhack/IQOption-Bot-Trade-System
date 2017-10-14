@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Module for IQ Option API."""
 
 import time
@@ -7,43 +6,42 @@ import logging
 import threading
 import requests
 
-from src.api.iqoption.http.login import Login
-from src.api.iqoption.http.loginv2 import Loginv2
-from src.api.iqoption.http.getprofile import Getprofile
-from src.api.iqoption.http.auth import Auth
-from src.api.iqoption.http.token import Token
-from src.api.iqoption.http.appinit import Appinit
-# from src.api.iqoption.http.profile import Profile
-from src.api.iqoption.http.billing import Billing
-from src.api.iqoption.http.buyback import Buyback
-from src.api.iqoption.http.changebalance import Changebalance
-from src.api.iqoption.ws.client import WebsocketClient
-from src.api.iqoption.ws.chanels.ssid import Ssid
-from src.api.iqoption.ws.chanels.subscribe import Subscribe
-from src.api.iqoption.ws.chanels.unsubscribe import Unsubscribe
-from src.api.iqoption.ws.chanels.setactives import SetActives
-from src.api.iqoption.ws.chanels.candles import GetCandles
-from src.api.iqoption.ws.chanels.buyv2 import Buyv2
+from iqoptionapi.http.login import Login
+from iqoptionapi.http.loginv2 import Loginv2
+from iqoptionapi.http.getprofile import Getprofile
+from iqoptionapi.http.auth import Auth
+from iqoptionapi.http.token import Token
+from iqoptionapi.http.appinit import Appinit
+# from iqoptionapi.http.profile import Profile
+from iqoptionapi.http.billing import Billing
+from iqoptionapi.http.buyback import Buyback
+from iqoptionapi.http.changebalance import Changebalance
+from iqoptionapi.ws.client import WebsocketClient
+from iqoptionapi.ws.chanels.ssid import Ssid
+from iqoptionapi.ws.chanels.subscribe import Subscribe
+from iqoptionapi.ws.chanels.unsubscribe import Unsubscribe
+from iqoptionapi.ws.chanels.setactives import SetActives
+from iqoptionapi.ws.chanels.candles import GetCandles
+from iqoptionapi.ws.chanels.buyv2 import Buyv2
 
-from src.api.iqoption.ws.objects.timesync import TimeSync
-from src.api.iqoption.ws.objects.profile import Profile
-from src.api.iqoption.ws.objects.candles import Candles
-from src.api.iqoption.ws.objects.chartdata import ChartData
+from iqoptionapi.ws.objects.timesync import TimeSync
+from iqoptionapi.ws.objects.profile import Profile
+from iqoptionapi.ws.objects.candles import Candles
+
 
 # InsecureRequestWarning: Unverified HTTPS request is being made.
 # Adding certificate verification is strongly advised.
 # See: https://urllib3.readthedocs.org/en/latest/security.html
-requests.packages.urllib3.disable_warnings()
+requests.packages.urllib3.disable_warnings()  # pylint: disable=no-member
 
 
-class IQOption(object):
+class IQOptionAPI(object):
     """Class for communication with IQ Option API."""
     # pylint: disable=too-many-public-methods
 
     timesync = TimeSync()
     profile = Profile()
     candles = Candles()
-    chartData = ChartData()
 
     def __init__(self, host, username, password, proxies=None):
         """
@@ -66,17 +64,17 @@ class IQOption(object):
         """Construct http url from resource url.
 
         :param resource: The instance of
-            :class:`Resource <src.api.iqoption.http.resource.Resource>`.
+            :class:`Resource <iqoptionapi.http.resource.Resource>`.
 
         :returns: The full url to IQ Option http resource.
         """
         return "/".join((self.https_url, resource.url))
 
-    def send_http_request(self, resource, method, data=None, params=None, headers=None):
+    def send_http_request(self, resource, method, data=None, params=None, headers=None): # pylint: disable=too-many-arguments
         """Send http request to IQ Option server.
 
         :param resource: The instance of
-            :class:`Resource <src.api.iqoption.http.resource.Resource>`.
+            :class:`Resource <iqoptionapi.http.resource.Resource>`.
         :param str method: The http request method.
         :param dict data: (optional) The http request data.
         :param dict params: (optional) The http request params.
@@ -84,7 +82,6 @@ class IQOption(object):
 
         :returns: The instance of :class:`Response <requests.Response>`.
         """
-        # pylint: disable=too-many-arguments
         logger = logging.getLogger(__name__)
         url = self.prepare_http_url(resource)
 
@@ -118,7 +115,7 @@ class IQOption(object):
         :param str name: The websocket request name.
         :param dict msg: The websocket request msg.
         """
-        logger = logging.getLogger("api")
+        logger = logging.getLogger(__name__)
 
         data = json.dumps(dict(name=name,
                                msg=msg))
@@ -129,8 +126,8 @@ class IQOption(object):
     def login(self):
         """Property for get IQ Option http login resource.
 
-        :returns: The instance of
-            :class:`Login <src.api.iqoption.http.login.Login>`.
+        :returns: The instance of :class:`Login
+            <iqoptionapi.http.login.Login>`.
         """
         return Login(self)
 
@@ -138,8 +135,8 @@ class IQOption(object):
     def loginv2(self):
         """Property for get IQ Option http loginv2 resource.
 
-        :returns: The instance of
-            :class:`Loginv2 <src.api.iqoption.http.loginv2.Loginv2>`.
+        :returns: The instance of :class:`Loginv2
+            <iqoptionapi.http.loginv2.Loginv2>`.
         """
         return Loginv2(self)
 
@@ -147,8 +144,8 @@ class IQOption(object):
     def auth(self):
         """Property for get IQ Option http auth resource.
 
-        :returns: The instance of
-            :class:`Auth <src.api.iqoption.http.auth.Auth>`.
+        :returns: The instance of :class:`Auth
+            <iqoptionapi.http.auth.Auth>`.
         """
         return Auth(self)
 
@@ -156,8 +153,8 @@ class IQOption(object):
     def appinit(self):
         """Property for get IQ Option http appinit resource.
 
-        :returns: The instance of
-            :class:`Appinit <src.api.iqoption.http.appinit.Appinit>`.
+        :returns: The instance of :class:`Appinit
+            <iqoptionapi.http.appinit.Appinit>`.
         """
         return Appinit(self)
 
@@ -165,8 +162,8 @@ class IQOption(object):
     def token(self):
         """Property for get IQ Option http token resource.
 
-        :returns: The instance of
-            :class:`Token <src.api.iqoption.http.auth.Token>`.
+        :returns: The instance of :class:`Token
+            <iqoptionapi.http.auth.Token>`.
         """
         return Token(self)
 
@@ -174,8 +171,8 @@ class IQOption(object):
     # def profile(self):
     #     """Property for get IQ Option http profile resource.
 
-    #     :returns: The instance of
-    #         :class:`Profile <src.api.iqoption.http.profile.Profile>`.
+    #     :returns: The instance of :class:`Profile
+    #         <iqoptionapi.http.profile.Profile>`.
     #     """
     #     return Profile(self)
 
@@ -183,8 +180,8 @@ class IQOption(object):
     def changebalance(self):
         """Property for get IQ Option http changebalance resource.
 
-        :returns: The instance of
-            :class:`Changebalance <src.api.iqoption.http.changebalance.Changebalance>`.
+        :returns: The instance of :class:`Changebalance
+            <iqoptionapi.http.changebalance.Changebalance>`.
         """
         return Changebalance(self)
 
@@ -192,8 +189,8 @@ class IQOption(object):
     def billing(self):
         """Property for get IQ Option http billing resource.
 
-        :returns: The instance of
-            :class:`Billing <src.api.iqoption.http.billing.Billing>`.
+        :returns: The instance of :class:`Billing
+            <iqoptionapi.http.billing.Billing>`.
         """
         return Billing(self)
 
@@ -201,8 +198,8 @@ class IQOption(object):
     def buyback(self):
         """Property for get IQ Option http buyback resource.
 
-        :returns: The instance of
-            :class:`Buyback <src.api.iqoption.http.buyback.Buyback>`.
+        :returns: The instance of :class:`Buyback
+            <iqoptionapi.http.buyback.Buyback>`.
         """
         return Buyback(self)
 
@@ -210,8 +207,8 @@ class IQOption(object):
     def getprofile(self):
         """Property for get IQ Option http getprofile resource.
 
-        :returns: The instance of
-            :class:`Login <src.api.iqoption.http.getprofile.Getprofile>`.
+        :returns: The instance of :class:`Login
+            <iqoptionapi.http.getprofile.Getprofile>`.
         """
         return Getprofile(self)
 
@@ -219,7 +216,8 @@ class IQOption(object):
     def ssid(self):
         """Property for get IQ Option websocket ssid chanel.
 
-        :returns: The instance of :class:`Ssid <src.api.iqoption.ws.chanels.ssid.Ssid>`.
+        :returns: The instance of :class:`Ssid
+            <iqoptionapi.ws.chanels.ssid.Ssid>`.
         """
         return Ssid(self)
 
@@ -227,8 +225,8 @@ class IQOption(object):
     def subscribe(self):
         """Property for get IQ Option websocket subscribe chanel.
 
-        :returns: The instance of
-            :class:`Subscribe <src.api.iqoption.ws.chanels.subscribe.Subscribe>`.
+        :returns: The instance of :class:`Subscribe
+            <iqoptionapi.ws.chanels.subscribe.Subscribe>`.
         """
         return Subscribe(self)
 
@@ -236,8 +234,8 @@ class IQOption(object):
     def unsubscribe(self):
         """Property for get IQ Option websocket unsubscribe chanel.
 
-        :returns: The instance of
-            :class:`Unsubscribe <src.api.iqoption.ws.chanels.unsubscribe.Unsubscribe>`.
+        :returns: The instance of :class:`Unsubscribe
+            <iqoptionapi.ws.chanels.unsubscribe.Unsubscribe>`.
         """
         return Unsubscribe(self)
 
@@ -245,8 +243,8 @@ class IQOption(object):
     def setactives(self):
         """Property for get IQ Option websocket setactives chanel.
 
-        :returns: The instance of
-            :class:`SetActives <src.api.iqoption.ws.chanels.setactives.SetActives>`.
+        :returns: The instance of :class:`SetActives
+            <iqoptionapi.ws.chanels.setactives.SetActives>`.
         """
         return SetActives(self)
 
@@ -254,8 +252,8 @@ class IQOption(object):
     def getcandles(self):
         """Property for get IQ Option websocket candles chanel.
 
-        :returns: The instance of
-            :class:`GetCandles <src.api.iqoption.ws.chanels.candles.GetCandles>`.
+        :returns: The instance of :class:`GetCandles
+            <iqoptionapi.ws.chanels.candles.GetCandles>`.
         """
         return GetCandles(self)
 
@@ -263,7 +261,8 @@ class IQOption(object):
     def buy(self):
         """Property for get IQ Option websocket buyv2 request.
 
-        :returns: The instance of :class:`Buyv2 <src.api.iqoption.ws.chanels.buyv2.Buyv2>`.
+        :returns: The instance of :class:`Buyv2
+            <iqoptionapi.ws.chanels.buyv2.Buyv2>`.
         """
         return Buyv2(self)
 
@@ -276,6 +275,7 @@ class IQOption(object):
     def connect(self):
         """Method for connection to IQ Option API."""
         response = self.login(self.username, self.password) # pylint: disable=not-callable
+        ssid = response.cookies["ssid"]
         self.set_session_cookies()
         self.websocket_client = WebsocketClient(self)
 
@@ -283,10 +283,6 @@ class IQOption(object):
         websocket_thread.daemon = True
         websocket_thread.start()
 
-        time.sleep(3)
+        time.sleep(5)
 
-        if not self.websocket_client.is_closed:
-            self.ssid(response.cookies["ssid"])
-
-
-
+        self.ssid(ssid) # pylint: disable=not-callable
