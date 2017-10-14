@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 """Module for IQ Option http loginv2 resource."""
 
-from src.api.iqoption.http.login import Login
+from iqoptionapi.http.login import Login
 
 
 class Loginv2(Login):
